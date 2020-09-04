@@ -1,0 +1,173 @@
+syntax on
+
+set noerrorbells
+set tabstop=2 softtabstop=2
+set shiftwidth=2
+set expandtab
+set smartindent
+set nu
+set nowrap
+set smartcase
+set noswapfile
+set nobackup
+set undodir=~/.vim/undodir
+set undofile
+set incsearch
+set backspace=indent,eol,start
+set colorcolumn=80
+let g:indentLine_color_term = 239
+let g:indentLine_char_list = ['|', '¦', '┆', '┊']
+highlight ColorColumn ctermbg=0 guibg=lightgrey
+"--Autocompletion--
+
+call plug#begin('~/.vim/plugged')
+Plug 'morhetz/gruvbox'
+Plug 'Yggdroot/indentLine'
+Plug 'jremmen/vim-ripgrep'
+Plug 'tpope/vim-fugitive'
+Plug 'leafgarland/typescript-vim'
+Plug 'vim-utils/vim-man'
+Plug 'lyuts/vim-rtags'
+Plug 'git@github.com:kien/ctrlp.vim.git'
+Plug 'git@github.com:Valloric/YouCompleteMe.git'
+Plug 'mbbill/undotree'
+Plug 'preservim/nerdtree'
+Plug 'pangloss/vim-javascript'
+Plug 'maxmellon/vim-jsx-pretty'
+Plug 'dense-analysis/ale'
+Plug 'ternjs/tern_for_vim', {'do' : 'npm install'}
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html'] }
+let g:prettier#autoformat = 0
+autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.yaml,*.html PrettierAsync
+
+call plug#end()
+
+" YCM: Start autocompletion after 4 chars
+let g:ycm_min_num_of_chars_for_completion = 4
+let g:ycm_min_num_identifier_candidate_chars = 4
+let g:ycm_enable_diagnostic_highlighting = 0
+" Don't show YCM's preview window [ I find it really annoying ]
+set completeopt-=preview
+let g:ycm_add_preview_to_completeopt = 0
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => lightline
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:lightline = {
+      \ 'colorscheme': 'wombat',
+      \ }
+
+let g:lightline = {
+      \ 'colorscheme': 'wombat',
+      \ 'active': {
+      \   'left': [ ['mode', 'paste'],
+      \             ['fugitive', 'readonly', 'filename', 'modified'] ],
+      \   'right': [ [ 'lineinfo' ], ['percent'] ]
+      \ },
+      \ 'component': {
+      \   'readonly': '%{&filetype=="help"?"":&readonly?"🔒":""}',
+      \   'modified': '%{&filetype=="help"?"":&modified?"+":&modifiable?"":"-"}',
+      \   'fugitive': '%{exists("*fugitive#head")?fugitive#head():""}'
+      \ },
+      \ 'component_visible_condition': {
+      \   'readonly': '(&filetype!="help"&& &readonly)',
+      \   'modified': '(&filetype!="help"&&(&modified||!&modifiable))',
+      \   'fugitive': '(exists("*fugitive#head") && ""!=fugitive#head())'
+      \ },
+      \ 'separator': { 'left': ' ', 'right': ' ' },
+      \ 'subseparator': { 'left': ' ', 'right': ' ' }
+      \ }
+" colorscheme gruvbox
+set background=dark
+
+if executable('rg')
+    let g:rg_derive_root='true'
+endif
+
+" Make search at current word
+function! s:getVisualSelection()
+    let [line_start, column_start] = getpos("'<")[1:2]
+    let [line_end, column_end] = getpos("'>")[1:2]
+    let lines = getline(line_start, line_end)
+
+    if len(lines) == 0
+        return ""
+    endif
+
+    let lines[-1] = lines[-1][:column_end - (&selection == "inclusive" ? 1 : 2)]
+    let lines[0] = lines[0][column_start - 1:]
+
+    return join(lines, "\n")
+endfunction
+
+vnoremap <silent><leader>f <Esc>:FZF -q <C-R>=<SID>getVisualSelection()<CR><CR>
+
+
+
+let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
+let mapleader = ","
+let g:netrw_browne_split=2
+let g:netrw_banner = 0
+let g:netrw_winsize = 25
+
+"ag is fast then no cache"
+let g:ctrlp_use_caching = 0
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Nerd Tree
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:NERDTreeWinPos = "right"
+let NERDTreeShowHidden=0
+let NERDTreeIgnore = ['\.pyc$', '__pycache__']
+let g:NERDTreeWinSize=35
+map <leader>nn :NERDTreeToggle<cr>
+map <leader>nb :NERDTreeFromBookmark<Space>
+map <leader>nf :NERDTreeFind<cr>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => cursorline
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set cursorline
+set cursorcolumn
+highlight CursorColumn ctermfg=White ctermbg=Yellow cterm=bold guifg=white guibg=yellow gui=bold
+
+hi CursorColumn ctermbg=0
+
+
+let g:ale_linters = {
+      \   'ruby': ['standardrb', 'rubocop'],
+      \   'python': ['flake8', 'pylint'],
+      \   'javascript': ['eslint'],
+      \}
+
+" Smart way to move between windows
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
+
+
+""""""""""""""""""""""""""""""
+" => Status line
+""""""""""""""""""""""""""""""
+" Always show the status line
+set laststatus=2
+
+" Format the status line
+" set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
+
+" airline config
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#left_sep = ' '
+let g:airline#extensions#tabline#left_alt_sep = '|'
+
+" Create enclosed
+inoremap " ""<left>
+inoremap ' ''<left>
+inoremap ( ()<left>
+inoremap [ []<left>
+inoremap { {}<left>
+inoremap {<CR> {<CR>}<ESC>O
+inoremap {;<CR> {<CR>};<ESC>O
