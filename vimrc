@@ -25,10 +25,11 @@ call plug#begin('~/.vim/plugged')
 " ES2015 code snippets (Optional)
 Plug 'epilande/vim-es2015-snippets'
 " React code snippets
-Plug 'epilande/vim-react-snippets'
+Plug 'honza/vim-snippets'
 " Ultisnips
 Plug 'SirVer/ultisnips'
-Plug 'mlaursen/vim-react-snippets'
+" Solved YCM & Ultisnips
+Plug 'ervandew/supertab'
 Plug 'morhetz/gruvbox'
 Plug 'Yggdroot/indentLine'
 Plug 'jremmen/vim-ripgrep'
@@ -37,13 +38,13 @@ Plug 'leafgarland/typescript-vim'
 Plug 'vim-utils/vim-man'
 Plug 'lyuts/vim-rtags'
 Plug 'git@github.com:kien/ctrlp.vim.git'
-" Plug 'git@github.com:Valloric/YouCompleteMe.git'
+Plug 'git@github.com:Valloric/YouCompleteMe.git'
 Plug 'Valloric/YouCompleteMe', { 'do': './install.py --tern-completer' }
 Plug 'mbbill/undotree'
 Plug 'preservim/nerdtree'
 Plug 'pangloss/vim-javascript'
 Plug 'maxmellon/vim-jsx-pretty'
-Plug 'dense-analysis/ale'
+Plug 'w0rp/ale'
 Plug 'ternjs/tern_for_vim', {'do' : 'npm install'}
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
@@ -52,8 +53,20 @@ let g:prettier#autoformat = 0
 autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.yaml,*.html PrettierAsync
 
 call plug#end()
-" Trigger configuration (Optional)
-let g:UltiSnipsExpandTrigger="<C-l>"
+
+
+" make YCM compatible with UltiSnips (using supertab)
+let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
+let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
+let g:SuperTabDefaultCompletionType = '<C-n>'
+
+" better key bindings for UltiSnipsExpandTrigger
+let g:UltiSnipsExpandTrigger = "<tab>"
+let g:UltiSnipsJumpForwardTrigger = "<tab>"
+let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+" If you want :UltiSnipsEdit to split your window.
+let g:UltiSnipsEditSplit="vertical"
+let g:UltiSnipsSnippetsDir = "~/.vim/UltiSnips"
 " YCM: Start autocompletion after 4 chars
 let g:ycm_min_num_of_chars_for_completion = 4
 let g:ycm_min_num_identifier_candidate_chars = 4
@@ -147,10 +160,23 @@ hi CursorColumn ctermbg=0
 
 
 let g:ale_linters = {
+      \   'css': ['csslint'],
+      \   'html': ['tidy'],
       \   'ruby': ['standardrb', 'rubocop'],
       \   'python': ['flake8', 'pylint'],
       \   'javascript': ['eslint'],
       \}
+let g:ale_sign_error = '✘'
+let g:ale_sign_warning = '⚠'
+" highlight ALEErrorSign ctermbg=NONE ctermfg=red
+highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
+let g:ale_fixers = {
+\  'javascript': ['prettier'],
+\  'css': ['prettier']
+\}
+let g:ale_fix_on_save = 1
+let g:ale_javascript_prettier_options = '--single-quote --trailing-comma all'
+
 
 " Smart way to move between windows
 map <C-j> <C-W>j
@@ -181,10 +207,4 @@ inoremap [ []<left>
 inoremap { {}<left>
 inoremap {<CR> {<CR>}<ESC>O<TAB>
 inoremap {;<CR> {<CR>};<ESC>O<TAB>
-" Trigger configuration. You need to change this to something else than <tab> if you use https://github.com/Valloric/YouCompleteMe.
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 
-" If you want :UltiSnipsEdit to split your window.
-let g:UltiSnipsEditSplit="vertical"
