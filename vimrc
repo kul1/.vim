@@ -1,6 +1,6 @@
 set encoding=utf-8
 syntax on
-
+set autoread
 set noerrorbells
 set tabstop=2 softtabstop=2
 set shiftwidth=2
@@ -22,6 +22,9 @@ highlight ColorColumn ctermbg=0 guibg=lightgrey
 "--Autocompletion--
 
 call plug#begin('~/.vim/plugged')
+" surround 
+Plug 'tpope/vim-surround'
+Plug 'terryma/vim-multiple-cursors'
 " ES2015 code snippets (Optional)
 Plug 'epilande/vim-es2015-snippets'
 " React code snippets
@@ -37,7 +40,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'leafgarland/typescript-vim'
 Plug 'vim-utils/vim-man'
 Plug 'lyuts/vim-rtags'
-Plug 'git@github.com:kien/ctrlp.vim.git'
+Plug 'ctrlpvim/ctrlp.vim'
 Plug 'git@github.com:Valloric/YouCompleteMe.git'
 Plug 'Valloric/YouCompleteMe', { 'do': './install.py --tern-completer' }
 Plug 'mbbill/undotree'
@@ -199,7 +202,7 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#left_sep = ' '
 let g:airline#extensions#tabline#left_alt_sep = '|'
 
-" Create enclosed
+" auto enclosed
 inoremap " ""<left>
 inoremap ' ''<left>
 inoremap ( ()<left>
@@ -207,4 +210,3 @@ inoremap [ []<left>
 inoremap { {}<left>
 inoremap {<CR> {<CR>}<ESC>O<TAB>
 inoremap {;<CR> {<CR>};<ESC>O<TAB>
-
