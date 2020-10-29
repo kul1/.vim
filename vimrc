@@ -19,6 +19,7 @@ set colorcolumn=80
 let g:indentLine_color_term = 239
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 highlight ColorColumn ctermbg=0 guibg=lightgrey
+set tags=tags
 "--Autocompletion--
 
 call plug#begin('~/.vim/plugged')
