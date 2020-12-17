@@ -1,6 +1,7 @@
 set encoding=utf-8
 syntax on
 set autoread
+set foldmethod=indent
 set noerrorbells
 set tabstop=2 softtabstop=2
 set shiftwidth=2
@@ -19,10 +20,9 @@ set colorcolumn=80
 let g:indentLine_color_term = 239
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 highlight ColorColumn ctermbg=0 guibg=lightgrey
-set tags=tags
 "--Autocompletion--
 "Ctags
-set tags=./tags;
+set tags+=gems.tags
 
 call plug#begin('~/.vim/plugged')
 "Markdown Preview
