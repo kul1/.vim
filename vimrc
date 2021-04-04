@@ -17,6 +17,7 @@ set undofile
 set incsearch
 set backspace=indent,eol,start
 set colorcolumn=80
+" :IndentLinesToggle toggles lines on and off.
 let g:indentLine_color_term = 239
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 highlight ColorColumn ctermbg=0 guibg=lightgrey
@@ -257,3 +258,5 @@ imap <silent> <F9> <Plug>StopMarkdownPreview
     " Set to 1, the preview server will be available to others in your network.
     " By default, the server only listens on localhost (127.0.0.1).
 autocmd BufEnter * if expand("%:p:h") !~ '^/tmp' | silent! lcd %:p:h | endif
+
+noremap <Leader>s :w<CR>
